@@ -1,0 +1,7 @@
+{
+  "name": "Visionary AI - Analisador Inteligente",
+  "description": "Uma ferramenta avançada de análise de imagens que utiliza o Gemini 2.5 Flash para extrair insights detalhados, identificar objetos, paletas de cores e textos.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
