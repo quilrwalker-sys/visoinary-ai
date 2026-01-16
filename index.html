@@ -23,24 +23,26 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
   </style>
-<script type="importmap">
-{
-  "imports": {
-    "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
-    "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
-    "rxjs/ajax": "https://esm.sh/rxjs@^7.8.2/ajax?conditions=es2015",
-    "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
-    "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
-    "rxjs/fetch": "https://esm.sh/rxjs@^7.8.2/fetch?conditions=es2015",
-    "@google/genai": "https://esm.sh/@google/genai@^1.37.0?external=rxjs",
-    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.0?external=rxjs",
-    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.0?external=rxjs",
-    "@angular/core": "https://esm.sh/@angular/core@^21.1.0?external=rxjs"
+  <script type="importmap">
+  {
+    "imports": {
+      "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
+      "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
+      "rxjs/ajax": "https://esm.sh/rxjs@^7.8.2/ajax?conditions=es2015",
+      "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
+      "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
+      "rxjs/fetch": "https://esm.sh/rxjs@^7.8.2/fetch?conditions=es2015",
+      "@google/genai": "https://esm.sh/@google/genai@^1.37.0?external=rxjs",
+      "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.0?external=rxjs",
+      "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.0?external=rxjs",
+      "@angular/core": "https://esm.sh/@angular/core@^21.1.0?external=rxjs"
+    }
   }
-}
-</script>
+  </script>
 </head>
 <body class="bg-[#0a0a0c] text-slate-200 min-h-screen">
   <app-root></app-root>
+  <!-- Este script é crucial para inicializar a aplicação no Netlify -->
+  <script type="module" src="./index.tsx"></script>
 </body>
 </html>

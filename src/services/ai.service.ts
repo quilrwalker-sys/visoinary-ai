@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 
 export interface AnalysisResult {
   summary: string;
@@ -15,7 +15,8 @@ export interface AnalysisResult {
   providedIn: 'root'
 })
 export class AiService {
-  private ai = new GoogleGenAI({ apiKey: (process as any).env.API_KEY });
+  // A chave de API é obtida diretamente do ambiente conforme as regras.
+  private ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   async analyzeImage(base64Data: string, mimeType: string): Promise<AnalysisResult> {
     const prompt = "Analise esta imagem em detalhes. Forneça um resumo curto, uma descrição detalhada, uma lista de objetos identificados, a paleta de cores predominantes (códigos hex), qualquer texto que consiga ler e o clima/vibe geral da imagem.";

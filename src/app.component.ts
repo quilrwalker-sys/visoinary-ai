@@ -1,6 +1,6 @@
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AnalyzerComponent } from './components/analyzer/analyzer.component';
+import { AnalyzerComponent } from './components/analyzer/analyzer.component.ts';
 
 @Component({
   selector: 'app-root',
