@@ -15,42 +15,63 @@ export interface AnalysisResult {
   providedIn: 'root'
 })
 export class AiService {
-  // A chave de API é obtida diretamente do ambiente conforme as regras.
-  private ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-  async analyzeImage(base64Data: string, mimeType: string): Promise<AnalysisResult> {
-    const prompt = "Analise esta imagem em detalhes. Forneça um resumo curto, uma descrição detalhada, uma lista de objetos identificados, a paleta de cores predominantes (códigos hex), qualquer texto que consiga ler e o clima/vibe geral da imagem.";
+  async analyzeImage(base64Data: string, mimeType: string, mode: 'flash' | 'pro' = 'flash'): Promise<AnalysisResult> {
+    const apiKey = process.env.API_KEY;
+    
+    if (!apiKey) {
+      throw new Error("API_KEY não disponível no ambiente.");
+    }
 
     try {
-      const response = await this.ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: {
-          parts: [
-            { inlineData: { data: base64Data, mimeType } },
-            { text: prompt }
-          ]
-        },
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              summary: { type: Type.STRING },
-              details: { type: Type.STRING },
-              objects: { type: Type.ARRAY, items: { type: Type.STRING } },
-              colors: { type: Type.ARRAY, items: { type: Type.STRING } },
-              textFound: { type: Type.STRING, nullable: true },
-              mood: { type: Type.STRING }
-            },
-            required: ["summary", "details", "objects", "colors", "mood"]
-          }
+      const ai = new GoogleGenAI({ apiKey });
+      
+      // Configuração baseada no modo
+      // Modo 'flash' desativa o pensamento para velocidade máxima
+      // Modo 'pro' (padrão do gemini-2.5-flash quando omitido) permite pensamento profundo
+      const config: any = {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            summary: { type: Type.STRING },
+            details: { type: Type.STRING },
+            objects: { type: Type.ARRAY, items: { type: Type.STRING } },
+            colors: { type: Type.ARRAY, items: { type: Type.STRING } },
+            textFound: { type: Type.STRING, nullable: true },
+            mood: { type: Type.STRING }
+          },
+          required: ["summary", "details", "objects", "colors", "mood"]
         }
+      };
+
+      if (mode === 'flash') {
+        config.thinkingConfig = { thinkingBudget: 0 };
+      }
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { inlineData: { data: base64Data, mimeType } },
+              { text: `Analise esta imagem em Português. ${mode === 'pro' ? 'Forneça uma análise extremamente profunda e detalhada.' : 'Seja direto e conciso.'} Retorne APENAS um JSON com: summary, details, objects (lista), colors (hex codes), textFound, mood.` }
+            ]
+          }
+        ],
+        config
       });
 
-      return JSON.parse(response.text) as AnalysisResult;
-    } catch (error) {
-      console.error("AI Analysis Error:", error);
-      throw error;
+      const text = response.text;
+      if (!text) throw new Error("A IA não retornou dados.");
+      return JSON.parse(text) as AnalysisResult;
+    } catch (error: any) {
+      console.error("Erro no serviço de IA:", error);
+      throw new Error(error.message || "Falha na comunicação com o Gemini.");
     }
+  }
+
+  isConfigured(): boolean {
+    return !!process.env.API_KEY;
   }
 }
